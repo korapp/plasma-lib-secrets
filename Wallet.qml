@@ -5,26 +5,26 @@ import "qByteArray.mjs" as Qbytes
 Exec {
     property string appId
     property int handler
-    
-    readonly property string commandBase: "dbus-send --session --type=method_call --print-reply=literal --dest=org.kde.kwalletd5 /modules/kwalletd5 org.kde.KWallet."
+    readonly property string infTimeout: '--reply-timeout=2147483647' // INT32_MAX = infinity for dbus-send
+    readonly property string dbusSend: 'dbus-send --type=method_call --print-reply=literal --dest=org.kde.kwalletd5 %1 /modules/kwalletd5 org.kde.KWallet.'
     
     enum EntryType {
         Password = 1,
         Binary,
         Map
     }
-   
+
     function setHandler(h) {
         handler = h
     }
 
-    function call(command) {
-        return exec(commandBase + command)
+    function call(method, optString = '') {
+        return exec(dbusSend.arg(optString) + method)
             .then(parseResponse)
     }
 
-    function callWallet(command, ...args) {
-        return call([command, f(handler), ...args, f(appId)].join(" "))
+    function callWallet(method, ...args) {
+        return call([method, f(handler), ...args, f(appId)].join(' '))
     }
 
     function formatEntryValue(value, type) {
@@ -60,7 +60,7 @@ Exec {
         if (handler) {
             return Promise.resolve(handler)
         }
-        return call(`open ${f(wallet)} int64:0 ${f(appId)}`)
+        return call(`open ${f(wallet)} int64:0 ${f(appId)}`, infTimeout)
             .then(Number.parseInt)
             .then(h => (setHandler(h), h))
     }
