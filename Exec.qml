@@ -1,13 +1,13 @@
 import QtQuick 2.0
 
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.plasma5support 2.0 as P5Support
 
-PlasmaCore.DataSource {
+P5Support.DataSource {
     engine: "executable"
 
     readonly property var callbacks: ({})
 
-    onNewData: {
+    onNewData: (sourceName, data) => {
         const { stdout } = data
         if (callbacks[sourceName] !== undefined) {
             if (!data["exit code"]) {

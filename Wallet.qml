@@ -6,7 +6,7 @@ Exec {
     property string appId
     property int handler
     readonly property string infTimeout: '--reply-timeout=2147483647' // INT32_MAX = infinity for dbus-send
-    readonly property string dbusSend: 'dbus-send --type=method_call --print-reply=literal --dest=org.kde.kwalletd5 %1 /modules/kwalletd5 org.kde.KWallet.'
+    readonly property string dbusSend: 'dbus-send --type=method_call --print-reply=literal --dest=org.kde.kwalletd6 %1 /modules/kwalletd6 org.kde.KWallet.'
     
     enum EntryType {
         Password = 1,
